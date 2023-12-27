@@ -1,36 +1,45 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Icon, Label, Menu, Table } from 'semantic-ui-react'
+import TodoService from '../services/TodoServices'
 
-export default function ProductList() {
+
+
+
+export default function Todos() {
+    const [todos, setTodos] = useState([])
+
+    useEffect(() => {
+        let todoService = new TodoService();
+        todoService.getTodos().then(result => setTodos(result.data))
+
+
+    })
+
     return (
         <div>
             <Table celled>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell>Header</Table.HeaderCell>
-                        <Table.HeaderCell>Header</Table.HeaderCell>
-                        <Table.HeaderCell>Header</Table.HeaderCell>
+                        <Table.HeaderCell>Kullanıcı ID</Table.HeaderCell>
+                        <Table.HeaderCell>Görev</Table.HeaderCell>
+                        <Table.HeaderCell>Tamamlanma</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
 
                 <Table.Body>
-                    <Table.Row>
-                        <Table.Cell>
-                            <Label ribbon>First</Label>
-                        </Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                    </Table.Row>
+                    {
+                        todos.map(todo => (
+                            <Table.Row>
+                                <Table.Cell>{todo.userId}</Table.Cell>
+                                <Table.Cell>{todo.title}</Table.Cell>
+                                <Table.Cell>{todo.completed ? 'evet' : 'hayır'}</Table.Cell>
+                            </Table.Row>
+
+                        ))
+                    }
+
+
+
                 </Table.Body>
 
                 <Table.Footer>
