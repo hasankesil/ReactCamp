@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Icon, Label, Menu, Table } from 'semantic-ui-react'
 import TodoService from '../services/TodoServices'
+import { Link } from 'react-router-dom'
+import TodoDetail from './TodoDetail'
 
 
 
@@ -30,7 +32,7 @@ export default function Todos() {
                     {
                         todos.map(todo => (
                             <Table.Row>
-                                <Table.Cell>{todo.userId}</Table.Cell>
+                                <Table.Cell> <Link to={`todo/${todo.id}`} >{todo.userId}</Link> </Table.Cell>
                                 <Table.Cell>{todo.title}</Table.Cell>
                                 <Table.Cell>{todo.completed ? 'evet' : 'hayır'}</Table.Cell>
                             </Table.Row>
@@ -61,6 +63,10 @@ export default function Todos() {
                     </Table.Row>
                 </Table.Footer>
             </Table>
+
+
+
+
         </div>
     )
 }
