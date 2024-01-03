@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TodoDetail from '../pages/TodoDetail'
 import CartDetail from '../pages/CartDetail'
 import { ToastContainer } from 'react-toastify'
+import TodoAdd from '../pages/TodoAdd'
 
 
 export default function Dashboard() {
@@ -27,6 +28,8 @@ export default function Dashboard() {
               <Route exact path='/todo' Component={Todos} />
               <Route exact path='/todo/:title' Component={TodoDetail} />
               <Route exact path='/cart' Component={CartDetail} />
+              <Route path='/todo/add' Component={TodoAdd} />
+
 
 
             </Routes>
