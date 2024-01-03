@@ -6,11 +6,13 @@ import Todos from '../pages/Todos'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TodoDetail from '../pages/TodoDetail'
 import CartDetail from '../pages/CartDetail'
+import { ToastContainer } from 'react-toastify'
 
 
 export default function Dashboard() {
   return (
     <div>
+      <ToastContainer position='bottom-right' />
       <Grid>
         <Grid.Row>
           <Grid.Column width={4}>
@@ -23,8 +25,8 @@ export default function Dashboard() {
             <Routes>
               <Route exact path='/' Component={Todos} />
               <Route exact path='/todo' Component={Todos} />
-              <Route exact path='/todo/:id' Component={TodoDetail} />
-              <Route path='/cart' Component={CartDetail} />
+              <Route exact path='/todo/:title' Component={TodoDetail} />
+              <Route exact path='/cart' Component={CartDetail} />
 
 
             </Routes>

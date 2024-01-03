@@ -13,10 +13,10 @@ import {
 import { useParams } from 'react-router-dom'
 
 export default function TodoDetail() {
-    let { id } = useParams()
+    let { title } = useParams()
     return (
         <div>
-            Kullanıcı Adı :  {id}
+            Kullanıcı Adı :  {title}
             <Card fluid>
                 <CardContent>
                     <Image

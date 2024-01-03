@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { Icon, Label, Menu, Table } from 'semantic-ui-react'
+import { Icon, Label, Menu, Table, Button } from 'semantic-ui-react'
 import TodoService from '../services/TodoServices'
 import { Link } from 'react-router-dom'
 import TodoDetail from './TodoDetail'
+import { useDispatch } from 'react-redux'
+import { addToCart } from '../store/actions/cartActions'
+
+import { toast } from 'react-toastify'
 
 
 
 
 export default function Todos() {
+
+    const dispatch = useDispatch()
+
     const [todos, setTodos] = useState([])
 
     useEffect(() => {
@@ -17,6 +24,11 @@ export default function Todos() {
 
     })
 
+    const handleAddToCart = (todo) => {
+        dispatch(addToCart(todo));
+        toast.success(`${todo.userId}  sepete eklendi`)
+    }
+
     return (
         <div>
             <Table celled>
@@ -25,6 +37,7 @@ export default function Todos() {
                         <Table.HeaderCell>Kullanıcı ID</Table.HeaderCell>
                         <Table.HeaderCell>Görev</Table.HeaderCell>
                         <Table.HeaderCell>Tamamlanma</Table.HeaderCell>
+                        <Table.HeaderCell></Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
 
@@ -32,9 +45,10 @@ export default function Todos() {
                     {
                         todos.map(todo => (
                             <Table.Row>
-                                <Table.Cell> <Link to={`todo/${todo.id}`} >{todo.userId}</Link> </Table.Cell>
+                                <Table.Cell> <Link to={`todo/${todo.title}`} >{todo.userId}</Link> </Table.Cell>
                                 <Table.Cell>{todo.title}</Table.Cell>
                                 <Table.Cell>{todo.completed ? 'evet' : 'hayır'}</Table.Cell>
+                                <Table.Cell> <Button onClick={() => handleAddToCart(todo)}> Sepete Ekle</Button>  </Table.Cell>
                             </Table.Row>
 
                         ))
