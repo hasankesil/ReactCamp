@@ -5,12 +5,18 @@
 .ui.main.container {
   margin-top: 4em;
 }
-.cardGroup{
+.ui.two.buttons{
   display: flex !important;
-
-  
+  justify-content: center !important;
 }
-.card2 {
-  margin: 20px !important;
-  margin-top: 0 !important;
+
+.ui.two.buttons button {
+  max-width: 200px;  
+
+}
+
+.ui.two.buttons button:hover {
+
+background-color: #1678c2 !important;
+  color: #ffffff !important;
 }
