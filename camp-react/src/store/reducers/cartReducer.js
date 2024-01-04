@@ -19,11 +19,40 @@ export default function cartReducer(state = initialState, { type, payload }) {
         };
       }
 
+    // case REMOVE_FROM_CART:
+    //   return {
+    //     ...state,
+    //     cartItems: state.cartItems.filter((c) => c.todo.id !== payload.id),
+    //   };
+
+    // default:
+    //   return state;
+    //...
+
     case REMOVE_FROM_CART:
-      return {
-        ...state,
-        cartItems: state.cartItems.filter((c) => c.todo.id === payload.id),
-      };
+      let existingProductIndex = state.cartItems.findIndex(
+        (c) => c.todo.id === payload.id
+      );
+
+      if (existingProductIndex !== -1) {
+        let existingProduct = state.cartItems[existingProductIndex];
+
+        if (existingProduct.quantity > 1) {
+          existingProduct.quantity--;
+        } else {
+          return {
+            ...state,
+            cartItems: [
+              ...state.cartItems.slice(0, existingProductIndex),
+              ...state.cartItems.slice(existingProductIndex + 1),
+            ],
+          };
+        }
+
+        return { ...state };
+      }
+
+      return state;
 
     default:
       return state;

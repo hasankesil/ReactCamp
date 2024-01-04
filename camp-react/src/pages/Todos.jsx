@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Icon, Label, Menu, Table, Button } from 'semantic-ui-react'
 import TodoService from '../services/TodoServices'
 import { Link } from 'react-router-dom'
-import TodoDetail from './TodoDetail'
-import { useDispatch } from 'react-redux'
-import { addToCart } from '../store/actions/cartActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { addToCart, removeFromCart } from '../store/actions/cartActions'
 
 import { toast } from 'react-toastify'
 
@@ -14,19 +13,40 @@ import { toast } from 'react-toastify'
 export default function Todos() {
 
     const dispatch = useDispatch()
+    const cartItems = useSelector(state => state.cart.cartItems);
 
     const [todos, setTodos] = useState([])
 
     useEffect(() => {
         let todoService = new TodoService();
-        todoService.getTodos().then(result => setTodos(result.data))
+        todoService.getTodos().then(result => setTodos(result.data));
 
 
-    })
+
+
+    });
 
     const handleAddToCart = (todo) => {
         dispatch(addToCart(todo));
-        toast.success(`${todo.userId}  sepete eklendi`)
+        toast.success(`${todo.userId}  sepete eklendi`, {
+            autoClose: 1200,
+        })
+    }
+
+
+    const handleRemoveFromCart = (todo) => {
+
+        // Check if the item is in the cart before trying to remove
+        const isItemInCart = cartItems.some((c) => c.todo.id === todo.id);
+
+        if (isItemInCart) {
+            dispatch(removeFromCart(todo));
+            toast.success(`${todo.userId} sepetten çıkarıldı`, {
+                autoClose: 1200,
+            })
+        } else {
+            // Do not show toast for items not in the cart
+        }
     }
 
     return (
@@ -49,6 +69,7 @@ export default function Todos() {
                                 <Table.Cell>{todo.title}</Table.Cell>
                                 <Table.Cell>{todo.completed ? 'evet' : 'hayır'}</Table.Cell>
                                 <Table.Cell> <Button onClick={() => handleAddToCart(todo)}> Sepete Ekle</Button>  </Table.Cell>
+                                <Table.Cell> <Button onClick={() => handleRemoveFromCart(todo)}> Sepetten Çıkar</Button>  </Table.Cell>
                             </Table.Row>
 
                         ))
