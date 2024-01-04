@@ -16,7 +16,7 @@ export default function Navi() {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
       setUser(storedUser);
-      setIsAuthenticated(true); // Kullanıcı kimliğini doğrula
+      setIsAuthenticated(true); 
     } else {
       setIsAuthenticated(false);
     }
@@ -31,13 +31,13 @@ export default function Navi() {
   };
 
   const handleRegister = (userData) => {
-    // Kayıt olma işlemleri
+   
     console.log('Kayıt başarılı:', userData);
 
-    // Kullanıcı bilgilerini sakla
+  
     localStorage.setItem('user', JSON.stringify(userData));
 
-    // Giriş yapılabilir
+  
     handleSignIn(userData);
   };
 
