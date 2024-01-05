@@ -2,12 +2,27 @@
 import React, { useState } from 'react';
 import { Button, Form, Message } from 'semantic-ui-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const RegisterForm = ({ onRegister, onSignIn, closeModal }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const relog = async () => {
+        await toast.success(' lütfen mevcut hesabınızla giriş yapınız', {
+            position: "top-right",
+            autoClose: 2000, // 2 saniye sonra kapat
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            marginTop: "200px",
+
+        });
+    }
 
     const handleRegister = () => {
         if (username && password) {
@@ -28,6 +43,7 @@ const RegisterForm = ({ onRegister, onSignIn, closeModal }) => {
 
                 localStorage.setItem('users', JSON.stringify(storedUsers));
                 onRegister(userData);
+                toast.success('Kayıt başarıyla tamamlandı!');
                 closeModal();
             }
         } else {
@@ -55,7 +71,7 @@ const RegisterForm = ({ onRegister, onSignIn, closeModal }) => {
             </Button>
             {error && <Message error content={error} />}
             <Message>
-                Zaten bir hesabınız var mı? <a onClick={() => { closeModal(); navigate('/'); }}>Giriş Yap</a>
+                Zaten bir hesabınız var mı? <a onClick={() => { closeModal(); navigate('/'); relog() }}>Giriş Yap</a>
             </Message>
         </Form>
     );

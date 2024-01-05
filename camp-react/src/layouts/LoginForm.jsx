@@ -1,6 +1,8 @@
 // LoginForm.jsx
 import React, { useState } from 'react';
 import { Button, Form, Message } from 'semantic-ui-react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = ({ onSignIn }) => {
     const [username, setUsername] = useState('');
@@ -16,6 +18,7 @@ const LoginForm = ({ onSignIn }) => {
         if (userToSignIn) {
             // Kullanıcı bulundu, oturumu aç
             onSignIn(userToSignIn);
+            toast.success('Giriş başarılı!');
         } else {
             // Kullanıcı bilgileri hatalı
             setError('Kullanıcı adı veya şifre hatalı.');
