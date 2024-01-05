@@ -1,11 +1,13 @@
 // RegisterForm.jsx
 import React, { useState } from 'react';
 import { Button, Form, Message } from 'semantic-ui-react';
+import { useNavigate } from 'react-router-dom';
 
-const RegisterForm = ({ onRegister, onSignIn }) => {
+const RegisterForm = ({ onRegister, onSignIn, closeModal }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleRegister = () => {
         if (username && password) {
@@ -26,6 +28,7 @@ const RegisterForm = ({ onRegister, onSignIn }) => {
 
                 localStorage.setItem('users', JSON.stringify(storedUsers));
                 onRegister(userData);
+                closeModal();
             }
         } else {
             setError('Kullanıcı adı ve şifre zorunludur.');
@@ -52,7 +55,7 @@ const RegisterForm = ({ onRegister, onSignIn }) => {
             </Button>
             {error && <Message error content={error} />}
             <Message>
-                Zaten bir hesabınız var mı? <a onClick={onSignIn}>Giriş Yap</a>
+                Zaten bir hesabınız var mı? <a onClick={() => { closeModal(); navigate('/'); }}>Giriş Yap</a>
             </Message>
         </Form>
     );

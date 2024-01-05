@@ -43,7 +43,7 @@ export default function SignedOut({ signIn }) {
             <Modal open={isRegisterModalOpen} onClose={closeRegisterModal} size="tiny">
                 <Modal.Header>Kayıt Ol</Modal.Header>
                 <Modal.Content>
-                    <RegisterForm onRegister={() => { }} onSignIn={signIn} />
+                    <RegisterForm onRegister={() => { }} onSignIn={signIn} closeModal={closeRegisterModal} />
                 </Modal.Content>
             </Modal>
         </Menu.Item>
