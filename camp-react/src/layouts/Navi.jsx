@@ -1,44 +1,25 @@
+// Navi.jsx
 import React, { useState } from 'react';
-import CartSummery from './CartSummery';
 import { Container, Menu } from 'semantic-ui-react';
+import CartSummery from './CartSummery';
 import SignedOut from './SignedOut';
 import SignedIn from './SignedIn';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 export default function Navi() {
-  const { cartItems } = useSelector((state) => state.cart);
   const [user, setUser] = useState(null);
+
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const handleSignIn = () => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
-      setUser(storedUser);
-      setIsAuthenticated(true); 
-    } else {
-      setIsAuthenticated(false);
-    }
+  const handleSignIn = (user) => {
+    setUser(user);
   };
-
 
 
   const handleSignOut = () => {
     setUser(null);
-    setIsAuthenticated(false);
+    localStorage.removeItem('user');
     navigate('/');
-  };
-
-  const handleRegister = (userData) => {
-   
-    console.log('Kayıt başarılı:', userData);
-
-  
-    localStorage.setItem('user', JSON.stringify(userData));
-
-  
-    handleSignIn(userData);
   };
 
   return (
@@ -48,12 +29,12 @@ export default function Navi() {
           <Menu.Item name="home" />
           <Menu.Item name="messages" />
           <Menu.Menu position="right">
-            {cartItems.length > 0 && <CartSummery />}
             {user ? (
               <SignedIn signOut={handleSignOut} user={user} />
             ) : (
-              <SignedOut signIn={handleSignIn} onRegister={handleRegister} />
+              <SignedOut signIn={handleSignIn} />
             )}
+            <CartSummery />
           </Menu.Menu>
         </Container>
       </Menu>

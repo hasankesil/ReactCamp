@@ -1,64 +1,47 @@
+// LoginForm.jsx
 import React, { useState } from 'react';
 import { Button, Form, Message } from 'semantic-ui-react';
 
-const LoginForm = ({ onSignIn, setUser, setIsAuthenticated }) => {
+const LoginForm = ({ onSignIn }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [email, setEmail] = useState('');
 
     const handleSignIn = () => {
-       
-        const registrationOccurred = localStorage.getItem('registrationOccurred');
+        const storedUsersJSON = localStorage.getItem('users');
+        const storedUsers = storedUsersJSON ? JSON.parse(storedUsersJSON) : [];
 
-        if (registrationOccurred === 'true' && email && password) {
-            
-            const storedUsers = JSON.parse(localStorage.getItem('users'));
+        const userToSignIn = storedUsers.find(user => user.username === username && user.password === password);
 
-           
-            const userToSignIn = storedUsers.find(user => user.email === email && user.password === password);
-
-            if (userToSignIn) {
-              
-                localStorage.setItem('user', JSON.stringify(userToSignIn));
-
-          
-                localStorage.removeItem('registrationOccurred');
-
-                setUser(userToSignIn);
-                setIsAuthenticated(true); 
-                setError('');
-                onSignIn(userToSignIn);
-            } else {
-                setError('Kullanıcı adı veya şifre yanlış.');
-            }
+        if (userToSignIn) {
+            // Kullanıcı bulundu, oturumu aç
+            onSignIn(userToSignIn);
         } else {
-         
-            localStorage.removeItem('registrationOccurred');
+            // Kullanıcı bilgileri hatalı
+            setError('Kullanıcı adı veya şifre hatalı.');
         }
     };
 
-
-
-
     return (
-        <div>
-            <h2>Giriş Yap</h2>
-            {error && <div style={{ color: 'red' }}>{error}</div>}
-            <Form>
-                <Form.Field>
-                    <label>Kullanıcı Adı:</label>
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                </Form.Field>
-                <Form.Field>
-                    <label>Şifre:</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </Form.Field>
-                <Button primary onClick={handleSignIn}>
-                    Giriş Yap
-                </Button>
-            </Form>
-        </div>
+        <Form error={!!error} style={{ width: '300px' }}>
+            <Form.Input
+                label="Kullanıcı Adı"
+                placeholder="Kullanıcı Adı"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+            />
+            <Form.Input
+                label="Şifre"
+                type="password"
+                placeholder="Şifre"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button primary onClick={handleSignIn}>
+                Giriş Yap
+            </Button>
+            {error && <Message error content={error} />}
+        </Form>
     );
 };
 

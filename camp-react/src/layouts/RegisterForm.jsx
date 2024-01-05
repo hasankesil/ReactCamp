@@ -1,79 +1,58 @@
+// RegisterForm.jsx
 import React, { useState } from 'react';
 import { Button, Form, Message } from 'semantic-ui-react';
 
 const RegisterForm = ({ onRegister, onSignIn }) => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const handleRegister = () => {
-     
-        if (firstName && lastName && email && password) {
-      
-            const storedUsers = JSON.parse(localStorage.getItem('users'));
+        if (username && password) {
+            const storedUsersJSON = localStorage.getItem('users');
+            const storedUsers = storedUsersJSON ? JSON.parse(storedUsersJSON) : [];
 
-        
-            const existingUser = storedUsers.find(user => user.firstName == firstName);
+            const existingUser = storedUsers.find(user => user.username === username);
 
             if (existingUser) {
                 setError('Bu kullanıcı adı zaten kullanılmaktadır.');
             } else {
-              
                 const userData = {
-                    firstName,
-                    lastName,
-                    email,
+                    username,
                     password,
                 };
 
                 storedUsers.push(userData);
 
                 localStorage.setItem('users', JSON.stringify(storedUsers));
-
-              
                 onRegister(userData);
             }
         } else {
-            setError('Lütfen tüm alanları doldurun.');
+            setError('Kullanıcı adı ve şifre zorunludur.');
         }
     };
 
     return (
         <Form error={!!error} style={{ width: '300px' }}>
             <Form.Input
-                label="First Name"
-                placeholder="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                label="Kullanıcı Adı"
+                placeholder="Kullanıcı Adı"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
             />
             <Form.Input
-                label="Last Name"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-            />
-            <Form.Input
-                label="Email"
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <Form.Input
-                label="Password"
+                label="Şifre"
                 type="password"
-                placeholder="Password"
+                placeholder="Şifre"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
             <Button primary onClick={handleRegister}>
-                Register
+                Kayıt Ol
             </Button>
             {error && <Message error content={error} />}
             <Message>
-                Already have an account? <a onClick={onSignIn}>Sign In</a>
+                Zaten bir hesabınız var mı? <a onClick={onSignIn}>Giriş Yap</a>
             </Message>
         </Form>
     );
