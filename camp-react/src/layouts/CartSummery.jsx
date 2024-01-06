@@ -19,17 +19,8 @@ export default function CartSummery() {
                 </Label>
 
               </Dropdown.Item>
-
-
-
-
             ))
-
-
-
           }
-
-
           <DropdownDivider />
           <DropdownItem as={NavLink} to="/cart" >Sepete Git</DropdownItem>
         </Dropdown.Menu>
