@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Image, Button } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart } from '../store/actions/cartActions';
+import { toast } from 'react-toastify'
 
 export default function CartDetail() {
     const dispatch = useDispatch();
@@ -9,10 +10,16 @@ export default function CartDetail() {
 
     const handleAddToCart = (todo) => {
         dispatch(addToCart(todo));
+        toast.success(`${todo.userId}  sepete eklendi`, {
+            autoClose: 1200,
+        })
     }
 
     const handleRemoveFromCart = (todo) => {
         dispatch(removeFromCart(todo));
+        toast.success(`${todo.userId} sepetten çıkarıldı`, {
+            autoClose: 1200,
+        })
     }
 
     return (
