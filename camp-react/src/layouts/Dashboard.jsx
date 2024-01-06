@@ -1,5 +1,5 @@
 import React from 'react'
-import Navi from './Navi'
+
 import Categories from './Categories'
 import { Grid } from 'semantic-ui-react'
 import Todos from '../pages/Todos'

@@ -36,7 +36,7 @@ export default function Todos() {
 
     const handleRemoveFromCart = (todo) => {
 
-        // Check if the item is in the cart before trying to remove
+        // Silmeye çalışmadan önce ürünün sepette olup olmadığını kontrol et
         const isItemInCart = cartItems.some((c) => c.todo.id === todo.id);
 
         if (isItemInCart) {
@@ -45,7 +45,7 @@ export default function Todos() {
                 autoClose: 1200,
             })
         } else {
-            // Do not show toast for items not in the cart
+            //Sepette olmayan ürünler için toast gösterme
         }
     }
 
