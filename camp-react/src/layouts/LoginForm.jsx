@@ -18,7 +18,7 @@ const LoginForm = ({ onSignIn }) => {
         if (userToSignIn) {
             // Kullanıcı bulundu, oturumu aç
             onSignIn(userToSignIn);
-            toast.success('Giriş başarılı!');
+            toast.success('Giriş başarılı!', { autoClose: 1500 });
         } else {
             // Kullanıcı bilgileri hatalı
             setError('Kullanıcı adı veya şifre hatalı.');

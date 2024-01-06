@@ -43,7 +43,7 @@ const RegisterForm = ({ onRegister, onSignIn, closeModal }) => {
 
                 localStorage.setItem('users', JSON.stringify(storedUsers));
                 onRegister(userData);
-                toast.success('Kayıt başarıyla tamamlandı!');
+                toast.success('Kayıt başarıyla tamamlandı!', { autoClose: 1700 });
                 closeModal();
             }
         } else {

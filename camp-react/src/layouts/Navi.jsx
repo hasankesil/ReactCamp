@@ -5,6 +5,9 @@ import CartSummery from './CartSummery';
 import SignedOut from './SignedOut';
 import SignedIn from './SignedIn';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Navi() {
   const [user, setUser] = useState(null);
@@ -20,10 +23,14 @@ export default function Navi() {
     setUser(null);
     localStorage.removeItem('user');
     navigate('/');
+    toast.success('Çıkış yapıldı!', {
+      autoClose: 1200
+    });
   };
 
   return (
     <div>
+
       <Menu inverted fixed="top">
         <Container>
           <Menu.Item name="home" />
