@@ -2,13 +2,11 @@ import React from 'react'
 import {
     CardMeta,
     CardHeader,
-    CardGroup,
     CardDescription,
     CardContent,
     Button,
     Card,
-    Image,
-    Container,
+    Image
 } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom'
 
