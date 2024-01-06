@@ -36,7 +36,7 @@ export default function SignedOut({ signIn }) {
             <Modal open={isLoginModalOpen} onClose={closeLoginModal} size="tiny">
                 <Modal.Header>Giriş Yap</Modal.Header>
                 <Modal.Content>
-                    <LoginForm onSignIn={signIn} />
+                    <LoginForm onSignIn={signIn} onClose={closeLoginModal} />
                 </Modal.Content>
             </Modal>
             {/* Kayıt formunu modal olarak göster */}

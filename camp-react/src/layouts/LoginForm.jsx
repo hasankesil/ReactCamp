@@ -1,13 +1,27 @@
 // LoginForm.jsx
 import React, { useState } from 'react';
 import { Button, Form, Message } from 'semantic-ui-react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const LoginForm = ({ onSignIn }) => {
+const LoginForm = ({ onSignIn, onClose }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
+    const relog = async () => {
+        await toast.success(' lütfen kayıt olun', {
+            position: "top-right",
+            autoClose: 2000, // 2 saniye sonra kapat
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            marginTop: "200px",
+
+        });
+    }
 
     const handleSignIn = () => {
         const storedUsersJSON = localStorage.getItem('users');
@@ -22,7 +36,11 @@ const LoginForm = ({ onSignIn }) => {
         } else {
             // Kullanıcı bilgileri hatalı
             setError('Kullanıcı adı veya şifre hatalı.');
+
+
         }
+        onClose();
+
     };
 
     return (
@@ -44,6 +62,9 @@ const LoginForm = ({ onSignIn }) => {
                 Giriş Yap
             </Button>
             {error && <Message error content={error} />}
+            <Message>
+                Hesabınız yok mu ? Hemen kayıt olun! <a onClick={() => { onClose(); navigate('/'); relog() }}>Kayıt ol</a>
+            </Message>
         </Form>
     );
 };
