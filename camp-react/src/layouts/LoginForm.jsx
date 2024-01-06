@@ -11,14 +11,10 @@ const LoginForm = ({ onSignIn, onClose }) => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const relog = async () => {
-        await toast.success(' lütfen kayıt olun', {
-            position: "top-right",
-            autoClose: 2000, // 2 saniye sonra kapat
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            marginTop: "200px",
+        await toast.success('Şimdi Kayıt ol sekmesine gidin!', {
+
+            autoClose: 1700,
+
 
         });
     }
