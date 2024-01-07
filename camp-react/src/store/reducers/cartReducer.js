@@ -1,4 +1,9 @@
-import { ADD_TO_CART, REMOVE_FROM_CART } from "../actions/cartActions";
+import {
+  ADD_TO_CART,
+  REMOVE_FROM_CART,
+  SET_CART_ITEMS,
+  CLEAR_CART,
+} from "../actions/cartActions";
 import { cartItems } from "../initalValues/cartItems";
 
 const initialState = {
@@ -18,16 +23,6 @@ export default function cartReducer(state = initialState, { type, payload }) {
           cartItems: [...state.cartItems, { quantity: 1, todo: payload }],
         };
       }
-
-    // case REMOVE_FROM_CART:
-    //   return {
-    //     ...state,
-    //     cartItems: state.cartItems.filter((c) => c.todo.id !== payload.id),
-    //   };
-
-    // default:
-    //   return state;
-    //...
 
     case REMOVE_FROM_CART:
       let existingProductIndex = state.cartItems.findIndex(
@@ -53,6 +48,25 @@ export default function cartReducer(state = initialState, { type, payload }) {
       }
 
       return state;
+
+    case CLEAR_CART:
+      // Sepetteki tüm öğeleri temizle
+      const clearedState = {
+        ...state,
+        cartItems: [],
+      };
+
+      // Local storage'i güncelle
+      localStorage.setItem("cartItems", JSON.stringify(clearedState.cartItems));
+
+      // Temizlenmiş state'i döndür
+      return clearedState;
+
+    case SET_CART_ITEMS:
+      return {
+        ...state,
+        cartItems: payload,
+      };
 
     default:
       return state;

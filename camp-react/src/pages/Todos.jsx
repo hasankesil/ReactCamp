@@ -1,53 +1,51 @@
-import React, { useState, useEffect } from 'react'
-import { Icon, Label, Menu, Table, Button } from 'semantic-ui-react'
-import TodoService from '../services/TodoServices'
-import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { addToCart, removeFromCart } from '../store/actions/cartActions'
-
-import { toast } from 'react-toastify'
-
-
-
+import React, { useState, useEffect } from 'react';
+import { Icon, Label, Menu, Table, Button } from 'semantic-ui-react';
+import TodoService from '../services/TodoServices';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, removeFromCart, clearCartAction } from '../store/actions/cartActions';
+import { toast } from 'react-toastify';
 
 export default function Todos() {
-
-    const dispatch = useDispatch()
-    const cartItems = useSelector(state => state.cart.cartItems);
-
-    const [todos, setTodos] = useState([])
+    const dispatch = useDispatch();
+    const cartItems = useSelector((state) => state.cart.cartItems);
+    const [todos, setTodos] = useState([]);
 
     useEffect(() => {
-        let todoService = new TodoService();
-        todoService.getTodos().then(result => setTodos(result.data));
-
-
-
-
+        const todoService = new TodoService();
+        todoService.getTodos().then((result) => setTodos(result.data));
     });
 
     const handleAddToCart = (todo) => {
         dispatch(addToCart(todo));
         toast.success(`${todo.userId}  sepete eklendi`, {
             autoClose: 1200,
-        })
-    }
-
+        });
+        updateLocalStorage();
+    };
 
     const handleRemoveFromCart = (todo) => {
-
-        // Silmeye çalışmadan önce ürünün sepette olup olmadığını kontrol et
         const isItemInCart = cartItems.some((c) => c.todo.id === todo.id);
 
         if (isItemInCart) {
             dispatch(removeFromCart(todo));
             toast.success(`${todo.userId} sepetten çıkarıldı`, {
                 autoClose: 1200,
-            })
+            });
+
+
+       
+            updateLocalStorage();
         } else {
-            //Sepette olmayan ürünler için toast gösterme
+         
         }
-    }
+    };
+
+
+
+    const updateLocalStorage = () => {
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    };
 
     return (
         <div>
@@ -62,21 +60,24 @@ export default function Todos() {
                 </Table.Header>
 
                 <Table.Body>
-                    {
-                        todos.map(todo => (
-                            <Table.Row>
-                                <Table.Cell> <Link to={`todo/${todo.title}`} >{todo.userId}</Link> </Table.Cell>
-                                <Table.Cell>{todo.title}</Table.Cell>
-                                <Table.Cell>{todo.completed ? 'evet' : 'hayır'}</Table.Cell>
-                                <Table.Cell> <Button onClick={() => handleAddToCart(todo)}> Sepete Ekle</Button>  </Table.Cell>
-                                <Table.Cell> <Button onClick={() => handleRemoveFromCart(todo)}> Sepetten Çıkar</Button>  </Table.Cell>
-                            </Table.Row>
-
-                        ))
-                    }
-
-
-
+                    {todos.map((todo) => (
+                        <Table.Row key={todo.id}>
+                            <Table.Cell>
+                                {' '}
+                                <Link to={`todo/${todo.title}`}>{todo.userId}</Link>{' '}
+                            </Table.Cell>
+                            <Table.Cell>{todo.title}</Table.Cell>
+                            <Table.Cell>{todo.completed ? 'evet' : 'hayır'}</Table.Cell>
+                            <Table.Cell>
+                                {' '}
+                                <Button onClick={() => handleAddToCart(todo)}> Sepete Ekle</Button>{' '}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {' '}
+                                <Button onClick={() => handleRemoveFromCart(todo)}> Sepetten Çıkar</Button>{' '}
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
                 </Table.Body>
 
                 <Table.Footer>
@@ -98,10 +99,6 @@ export default function Todos() {
                     </Table.Row>
                 </Table.Footer>
             </Table>
-
-
-
-
         </div>
-    )
+    );
 }

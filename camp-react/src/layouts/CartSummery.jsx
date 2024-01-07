@@ -1,11 +1,11 @@
 // CartSummery.jsx
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Dropdown, DropdownDivider, DropdownItem, Label } from 'semantic-ui-react';
 import { useDispatch } from 'react-redux';
-import { addToCart, removeFromCart } from '../store/actions/cartActions';
+import { addToCart, removeFromCart, setCartItems } from '../store/actions/cartActions';
 import { toast } from 'react-toastify';
 
 
@@ -14,18 +14,38 @@ export default function CartSummery() {
   const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    // Sayfa yüklendiğinde localStorage'dan sepet verilerini oku
+    const savedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+    // Redux store'a set et
+    dispatch(setCartItems(savedCartItems));
+  }, [dispatch]);
+
   const handleAddToCart = (todo) => {
     dispatch(addToCart(todo));
     toast.success(`${todo.userId} sepete eklendi`, {
       autoClose: 1200,
     });
+    updateLocalStorage();
   };
 
   const handleRemoveFromCart = (todo) => {
     dispatch(removeFromCart(todo));
     toast.success(`${todo.userId} sepetten çıkarıldı`, {
       autoClose: 1200,
+
     });
+
+
+  
+    updateLocalStorage();
+  };
+
+
+  
+  const updateLocalStorage = () => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
   };
 
   return (
@@ -50,7 +70,6 @@ export default function CartSummery() {
             </Dropdown.Item>
           ))}
         </Dropdown.Menu>
-
       </Dropdown>
     </div>
   );
