@@ -31,33 +31,26 @@ export default function CartSummery() {
   return (
     <div>
       <Dropdown item text='Sepetiniz'>
-        <Dropdown.Menu>
+        <Dropdown.Menu onClick={(e) => e.stopPropagation()}>
           {cartItems.map((cartItem) => (
             <Dropdown.Item key={cartItem.todo.userId}>
               {cartItem.todo.userId} numaralı kullanıcı {'(ürün)'}: {'  '}
               <Label>{cartItem.quantity}</Label>
 
-
               <span style={{ display: 'flex', alignItems: 'center', marginLeft: '8px' }}>
-                <Label as='a' onClick={() => handleAddToCart(cartItem.todo)} color='green' tag>
+                <Label as='a' onClick={(e) => handleAddToCart(cartItem.todo, e)} color='green' tag>
                   Arttır
                 </Label>
-                <Label as='a' onClick={() => handleRemoveFromCart(cartItem.todo)} color='red' tag style={{ transform: 'rotate(180deg)', display: 'inline-block' }}>
+                <Label as='a' onClick={(e) => handleRemoveFromCart(cartItem.todo, e)} color='red' tag style={{ transform: 'rotate(180deg)', display: 'inline-block' }}>
                   <div style={{ transform: 'rotate(180deg)', display: 'inline-block' }}>
                     Azalt
                   </div>
                 </Label>
               </span>
-
-
-
             </Dropdown.Item>
           ))}
-          <DropdownDivider />
-          <DropdownItem as={NavLink} to='/cart'>
-            Sepete Git
-          </DropdownItem>
         </Dropdown.Menu>
+
       </Dropdown>
     </div>
   );
