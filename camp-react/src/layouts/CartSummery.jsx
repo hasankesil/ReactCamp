@@ -38,12 +38,12 @@ export default function CartSummery() {
     });
 
 
-  
+
     updateLocalStorage();
   };
 
 
-  
+
   const updateLocalStorage = () => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   };
@@ -69,6 +69,9 @@ export default function CartSummery() {
               </span>
             </Dropdown.Item>
           ))}
+          <DropdownItem as={NavLink} to='/cart'>
+            Sepete Git
+          </DropdownItem>
         </Dropdown.Menu>
       </Dropdown>
     </div>

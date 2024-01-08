@@ -4,6 +4,7 @@ import { Button, Form, Message } from 'semantic-ui-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 
 const RegisterForm = ({ onRegister, onSignIn, closeModal }) => {
@@ -24,30 +25,31 @@ const RegisterForm = ({ onRegister, onSignIn, closeModal }) => {
         });
     }
 
-    const handleRegister = () => {
-        if (username && password) {
-            const storedUsersJSON = localStorage.getItem('users');
-            const storedUsers = storedUsersJSON ? JSON.parse(storedUsersJSON) : [];
+    const handleRegister = async () => {
+        try {
+            if (username && password) {
+                // Kontrol: Aynı kullanıcı adıyla zaten kayıtlı bir kullanıcı var mı?
+                const existingUserResponse = await axios.get(`http://localhost:3000/users?username=${username}`);
 
-            const existingUser = storedUsers.find(user => user.username === username);
+                if (existingUserResponse.data.length > 0) {
+                    setError('Bu kullanıcı adı zaten kullanılmaktadır.');
+                    return;
+                }
 
-            if (existingUser) {
-                setError('Bu kullanıcı adı zaten kullanılmaktadır.');
-            } else {
-                const userData = {
+                // Kayıt işlemi
+                const response = await axios.post('http://localhost:3000/users', {
                     username,
                     password,
-                };
+                });
 
-                storedUsers.push(userData);
-
-                localStorage.setItem('users', JSON.stringify(storedUsers));
-                onRegister(userData);
+                onRegister(response.data);
                 toast.success('Kayıt başarıyla tamamlandı!', { autoClose: 1700 });
                 closeModal();
+            } else {
+                setError('Kullanıcı adı ve şifre zorunludur.');
             }
-        } else {
-            setError('Kullanıcı adı ve şifre zorunludur.');
+        } catch (error) {
+            setError('Kayıt sırasında bir hata oluştu.');
         }
     };
 

@@ -4,6 +4,7 @@ import { Button, Form, Message } from 'semantic-ui-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 const LoginForm = ({ onSignIn, onClose }) => {
     const [username, setUsername] = useState('');
@@ -18,26 +19,28 @@ const LoginForm = ({ onSignIn, onClose }) => {
 
         });
     }
+    // Frontend tarafında
+    const handleSignIn = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3000/users?username=${username}&password=${password}`);
 
-    const handleSignIn = () => {
-        const storedUsersJSON = localStorage.getItem('users');
-        const storedUsers = storedUsersJSON ? JSON.parse(storedUsersJSON) : [];
-
-        const userToSignIn = storedUsers.find(user => user.username === username && user.password === password);
-
-        if (userToSignIn) {
-            // Kullanıcı bulundu, oturumu aç
-            onSignIn(userToSignIn);
-            toast.success('Giriş başarılı!', { autoClose: 1500 });
-        } else {
-            // Kullanıcı bilgileri hatalı
-            setError('Kullanıcı adı veya şifre hatalı.');
-
-
+            // Backend'den başarılı bir cevap alındıysa
+            if (response.data.length > 0) {
+                onSignIn(response.data[0]);
+                setError('');
+                toast.success('Giriş başarılı!', { autoClose: 1500 });
+            } else {
+                // Kullanıcı bulunamadı
+                setError('Kullanıcı adı veya şifre hatalı.');
+            }
+        } catch (error) {
+            // Axios isteği sırasında bir hata oluştuysa
+            console.error('Axios Hatası:', error);
+            setError('Giriş sırasında bir hata oluştu.');
         }
-
-
     };
+
+
 
     return (
         <Form error={!!error} style={{ width: '300px' }}>
