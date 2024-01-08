@@ -1,18 +1,19 @@
 // CartSummery.jsx
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { Dropdown, DropdownDivider, DropdownItem, Label } from 'semantic-ui-react';
 import { useDispatch } from 'react-redux';
 import { addToCart, removeFromCart, setCartItems } from '../store/actions/cartActions';
 import { toast } from 'react-toastify';
-
+import axios from 'axios';
 
 
 export default function CartSummery() {
   const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const [addedItemId, setAddedItemId] = useState(null);
 
   useEffect(() => {
     // Sayfa yüklendiğinde localStorage'dan sepet verilerini oku
@@ -22,30 +23,46 @@ export default function CartSummery() {
     dispatch(setCartItems(savedCartItems));
   }, [dispatch]);
 
-  const handleAddToCart = (todo) => {
-    dispatch(addToCart(todo));
-    toast.success(`${todo.userId} sepete eklendi`, {
-      autoClose: 1200,
-    });
-    updateLocalStorage();
+  const handleAddToCart = async (todo) => {
+    try {
+      dispatch(addToCart(todo));
+      toast.success(`${todo.userId} sepete eklendi`, {
+        autoClose: 1200,
+      });
+
+      const response = await axios.post('http://localhost:3000/cartItems', { todo });
+      const newAddedItemId = response.data.id;
+
+      setAddedItemId(newAddedItemId);
+
+
+    } catch (error) {
+      console.error('Ürün eklenirken bir hata oluştu:', error);
+    }
   };
 
-  const handleRemoveFromCart = (todo) => {
-    dispatch(removeFromCart(todo));
-    toast.success(`${todo.userId} sepetten çıkarıldı`, {
-      autoClose: 1200,
+  const handleRemoveFromCart = async (todo) => {
+    try {
+      const isItemInCart = cartItems.some((c) => c.todo.id === todo.id);
 
-    });
+      if (isItemInCart) {
+        dispatch(removeFromCart(todo));
+        toast.success(`${todo.userId} sepetten çıkarıldı`, {
+          autoClose: 1200,
+        });
+
+        if (addedItemId) {
+          await axios.delete(`http://localhost:3000/cartItems/${addedItemId}`);
+          console.log('Ürün başarıyla silindi:', addedItemId);
+        } else {
+          console.error('Ürün ID bulunamadı.');
+        }
 
 
-
-    updateLocalStorage();
-  };
-
-
-
-  const updateLocalStorage = () => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      }
+    } catch (error) {
+      console.error('Ürün silinirken bir hata oluştu:', error.response);
+    }
   };
 
   return (

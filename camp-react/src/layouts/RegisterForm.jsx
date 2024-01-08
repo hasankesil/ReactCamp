@@ -40,6 +40,7 @@ const RegisterForm = ({ onRegister, onSignIn, closeModal }) => {
                 const response = await axios.post('http://localhost:3000/users', {
                     username,
                     password,
+                    cart: []
                 });
 
                 onRegister(response.data);
