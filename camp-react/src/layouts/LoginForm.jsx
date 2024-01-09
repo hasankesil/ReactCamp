@@ -5,12 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import { setUser } from '../store/actions/userActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCartItems } from '../store/actions/cartActions';
+
 
 const LoginForm = ({ onSignIn, onClose }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const relog = async () => {
         await toast.success('Şimdi Kayıt ol sekmesine gidin!', {
 
@@ -19,27 +24,49 @@ const LoginForm = ({ onSignIn, onClose }) => {
 
         });
     }
-    // Frontend tarafında
+
+    const user = useSelector((state) => state.user.user);
+    const { cartItems } = useSelector((state) => state.cart);
+
+    const initializeUserFromDatabase = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3000/users?username=${username}&password=${password}`);
+            if (response.data.length > 0) {
+                const currentUser = response.data[0];
+                dispatch(setUser(currentUser));
+
+                const currentCart = currentUser.cart;
+                dispatch(setCartItems(currentCart));
+                console.log('Kullanıcı ürünleri:', currentCart);
+            } else {
+                console.error('Kullanıcı bulunamadı.');
+            }
+        } catch (error) {
+            console.error('Kullanıcı verileri alınamadı:', error.response);
+        }
+    };
+
     const handleSignIn = async () => {
         try {
             const response = await axios.get(`http://localhost:3000/users?username=${username}&password=${password}`);
 
-            // Backend'den başarılı bir cevap alındıysa
             if (response.data.length > 0) {
-                onSignIn(response.data[0]);
+                const userId = response.data[0].id;
+                dispatch(setUser(response.data[0]));
+
+                await initializeUserFromDatabase();
+
                 setError('');
                 toast.success('Giriş başarılı!', { autoClose: 1500 });
+                onClose();
             } else {
-                // Kullanıcı bulunamadı
                 setError('Kullanıcı adı veya şifre hatalı.');
             }
         } catch (error) {
-            // Axios isteği sırasında bir hata oluştuysa
             console.error('Axios Hatası:', error);
             setError('Giriş sırasında bir hata oluştu.');
         }
     };
-
 
 
     return (

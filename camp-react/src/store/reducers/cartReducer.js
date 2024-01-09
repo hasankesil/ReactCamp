@@ -1,8 +1,8 @@
+//cartReducer.js
 import {
   ADD_TO_CART,
   REMOVE_FROM_CART,
   SET_CART_ITEMS,
-  CLEAR_CART,
 } from "../actions/cartActions";
 import { cartItems } from "../initalValues/cartItems";
 
@@ -15,7 +15,11 @@ export default function cartReducer(state = initialState, { type, payload }) {
     case ADD_TO_CART:
       let todo = state.cartItems.find((c) => c.todo.id === payload.id);
       if (todo) {
-        todo.quantity++;
+        if (todo.quantity === undefined || isNaN(todo.quantity)) {
+          todo.quantity = 1;
+        } else {
+          todo.quantity++;
+        }
         return { ...state };
       } else {
         return {
@@ -48,19 +52,6 @@ export default function cartReducer(state = initialState, { type, payload }) {
       }
 
       return state;
-
-    case CLEAR_CART:
-      // Sepetteki tüm öğeleri temizle
-      const clearedState = {
-        ...state,
-        cartItems: [],
-      };
-
-      // Local storage'i güncelle
-      localStorage.setItem("cartItems", JSON.stringify(clearedState.cartItems));
-
-      // Temizlenmiş state'i döndür
-      return clearedState;
 
     case SET_CART_ITEMS:
       return {

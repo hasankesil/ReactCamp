@@ -1,3 +1,2 @@
-export const cartItems = [
-  //   { quantity: 1, product: { productName: "Çubuk Kraker" } },
-];
+//cartItems.js
+export const cartItems = [];

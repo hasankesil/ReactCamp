@@ -1,8 +1,11 @@
 // SignedIn.jsx
 import React from 'react';
 import { Menu, Dropdown, Image } from 'semantic-ui-react';
+import { useSelector } from 'react-redux';
 
 export default function SignedIn({ signOut, user }) {
+
+
 
     return (
         <Menu.Item>
